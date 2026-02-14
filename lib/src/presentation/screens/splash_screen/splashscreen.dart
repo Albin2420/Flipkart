@@ -16,7 +16,7 @@ class Splashscreen extends StatelessWidget {
       const SystemUiOverlayStyle(
         statusBarColor: primaryColor,
         statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light, // iOS
+        statusBarBrightness: Brightness.light,
         systemNavigationBarColor: primaryColor,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),

@@ -5,12 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
-    Get.put(HomeController());
-
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -20,7 +20,6 @@ class HomeScreen extends StatelessWidget {
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
-
     final width = MediaQuery.of(context).size.width;
 
     int crossAxisCount = 2;
@@ -30,7 +29,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFE4CF0C), // your theme yellow
+        backgroundColor: const Color(0xFFE4CF0C),
         elevation: 0,
         leading: const Icon(Icons.menu, color: Colors.black),
 
@@ -62,42 +61,59 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: GridView.builder(
-          padding: EdgeInsets.only(left: 12, right: 12, top: 8),
-          itemCount: 20,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 8,
-            childAspectRatio: 0.75,
-          ),
-          itemBuilder: (context, index) {
-            final bool isLastColumn = (index + 1) % crossAxisCount == 0;
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            return Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  right: isLastColumn
-                      ? BorderSide.none
-                      : BorderSide(color: Colors.grey.shade300, width: 1),
-                ),
+          if (controller.error.value.isNotEmpty) {
+            return Center(child: Text(controller.error.value));
+          }
+
+          if (controller.productsList.isEmpty) {
+            return const Center(child: Text("No products available"));
+          }
+
+          return RefreshIndicator(
+            onRefresh: controller.fetchproduct,
+            child: GridView.builder(
+              padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
+              itemCount: controller.productsList.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 8,
+                childAspectRatio: 0.75,
               ),
-              child: ProductCard(
-                imageUrl:
-                    'https://tameson.com/cdn/shop/files/tp-da-magneetventiel-messing-014inch-01.b7e14d2b_9dd44126-da93-4d0c-be23-d9972515ee90.jpg?v=1729912351',
-                title: '12 v solenoid valve ',
-                price: 130,
-                originalPrice: 400,
-                discountPercent: 30,
-                rating: 4,
-                deliveryText: 'Delvered by 12 th august',
-                isLiked: false,
-                onTap: () {},
-                onLikeTap: () {},
-              ),
-            );
-          },
-        ),
+              itemBuilder: (context, index) {
+                final product = controller.productsList[index];
+                final bool isLastColumn = (index + 1) % crossAxisCount == 0;
+
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: isLastColumn
+                          ? BorderSide.none
+                          : BorderSide(color: Colors.grey.shade300, width: 1),
+                    ),
+                  ),
+                  child: ProductCard(
+                    imageUrl: product.image,
+                    title: product.title,
+                    price: product.price.toInt(),
+                    originalPrice: product.price.toInt(),
+                    discountPercent: 10,
+                    rating: product.rating?.toInt() ?? 0,
+                    deliveryText: "Delivered soon",
+                    isLiked: false,
+                    onTap: () {},
+                    onLikeTap: () {},
+                  ),
+                );
+              },
+            ),
+          );
+        }),
       ),
     );
   }

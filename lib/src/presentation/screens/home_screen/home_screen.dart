@@ -74,9 +74,9 @@ class HomeScreen extends StatelessWidget {
                     "Getting your products ready 📦 ...",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade800,
+                      color: Color(0xFF010048),
                     ),
                   ),
                 ],
@@ -102,6 +102,8 @@ class HomeScreen extends StatelessWidget {
           }
 
           return RefreshIndicator(
+            color: const Color(0xFF010048),
+            backgroundColor: Colors.white,
             onRefresh: controller.fetchproduct,
             child: GridView.builder(
               padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
@@ -127,11 +129,12 @@ class HomeScreen extends StatelessWidget {
                   child: ProductCard(
                     imageUrl: product.image,
                     title: product.title,
-                    price: product.price.toInt(),
                     originalPrice: product.price.toInt(),
                     discountPercent: 10,
+                    price: ((product.price.toInt() * (100 - 10)) / 100).round(),
                     rating: product.rating.toInt(),
                     deliveryText: "Delivered soon",
+                    ratingCount: product.ratingCount,
                     isLiked: false,
                     onTap: () {},
                     onLikeTap: () {},

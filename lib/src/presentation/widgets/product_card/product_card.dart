@@ -7,9 +7,9 @@ class ProductCard extends StatelessWidget {
   final int originalPrice;
   final int discountPercent;
   final int rating;
+  final int ratingCount;
   final String deliveryText;
   final bool isLiked;
-
   final VoidCallback onTap;
   final VoidCallback onLikeTap;
 
@@ -21,6 +21,7 @@ class ProductCard extends StatelessWidget {
     required this.originalPrice,
     required this.discountPercent,
     required this.rating,
+    required this.ratingCount,
     required this.deliveryText,
     required this.isLiked,
     required this.onTap,
@@ -47,7 +48,6 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
 
-                // ❤️ Like button
                 Positioned(
                   top: 6,
                   right: 6,
@@ -63,18 +63,14 @@ class ProductCard extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(height: 6),
-
           Text(
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontSize: 13),
           ),
-
           const SizedBox(height: 4),
-
           Row(
             children: [
               Text(
@@ -100,20 +96,28 @@ class ProductCard extends StatelessWidget {
               ),
             ],
           ),
-
+          const SizedBox(height: 4),
           Row(
-            children: List.generate(
-              5,
-              (index) => Icon(
-                index < rating ? Icons.star : Icons.star_border,
-                size: 14,
-                color: Colors.green,
+            children: [
+              Row(
+                children: List.generate(
+                  5,
+                  (index) => Icon(
+                    index < rating ? Icons.star : Icons.star_border,
+                    size: 14,
+                    color: Colors.green,
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(width: 4),
+              Text(
+                '($ratingCount)',
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
           ),
-
+          const SizedBox(height: 4),
           Text(deliveryText, style: const TextStyle(fontSize: 11)),
-
           const SizedBox(height: 6),
         ],
       ),

@@ -85,7 +85,16 @@ class HomeScreen extends StatelessWidget {
           }
 
           if (controller.error.value.isNotEmpty) {
-            return Center(child: Text(controller.error.value));
+            return Center(
+              child: Text(
+                controller.error.value,
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade800,
+                ),
+              ),
+            );
           }
 
           if (controller.productsList.isEmpty) {

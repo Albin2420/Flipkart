@@ -3,6 +3,7 @@ import 'package:flipkart/src/presentation/widgets/product_card/product_card.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -63,7 +64,24 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 26,
+                children: [
+                  const CircularProgressIndicator(color: Color(0xFF010048)),
+                  Text(
+                    "Getting your products ready 📦 ...",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade800,
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
 
           if (controller.error.value.isNotEmpty) {
@@ -103,7 +121,7 @@ class HomeScreen extends StatelessWidget {
                     price: product.price.toInt(),
                     originalPrice: product.price.toInt(),
                     discountPercent: 10,
-                    rating: product.rating?.toInt() ?? 0,
+                    rating: product.rating.toInt(),
                     deliveryText: "Delivered soon",
                     isLiked: false,
                     onTap: () {},

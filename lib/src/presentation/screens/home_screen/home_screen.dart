@@ -1,5 +1,5 @@
 import 'package:flipkart/src/presentation/controller/home_controller/home_controller.dart';
-import 'package:flipkart/src/presentation/screens/home_screen/widgets/product_card_skelton.dart';
+import 'package:flipkart/src/presentation/screens/home_screen/widgets/loading/product_card_skelton.dart';
 import 'package:flipkart/src/presentation/widgets/product_card/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

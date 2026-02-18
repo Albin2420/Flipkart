@@ -1,4 +1,5 @@
 import 'package:flipkart/src/presentation/controller/home_controller/home_controller.dart';
+import 'package:flipkart/src/presentation/screens/home_screen/widgets/product_card_skelton.dart';
 import 'package:flipkart/src/presentation/widgets/product_card/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,23 +65,16 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 26,
-                children: [
-                  const CircularProgressIndicator(color: Color(0xFF010048)),
-                  Text(
-                    "Getting your products ready 📦 ...",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF010048),
-                    ),
-                  ),
-                ],
+            return GridView.builder(
+              padding: const EdgeInsets.all(12),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.65,
               ),
+              itemCount: 6,
+              itemBuilder: (_, __) => ProductCardSkeleton(),
             );
           }
 

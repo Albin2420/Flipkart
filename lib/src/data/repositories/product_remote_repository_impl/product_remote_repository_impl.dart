@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flipkart/src/core/network/failure.dart';
 import 'package:flipkart/src/core/url.dart';
 import 'package:flipkart/src/data/models/product_model/product_model.dart';
-import 'package:flipkart/src/data/services/dio_services/dio_service.dart';
+import 'package:flipkart/src/core/network/dio_client.dart';
 import 'package:flipkart/src/domain/repositories/product_remote_repository.dart/product_remote_repository.dart';
 
 class ProductRemoteRepositoryImpl extends ProductRepository {

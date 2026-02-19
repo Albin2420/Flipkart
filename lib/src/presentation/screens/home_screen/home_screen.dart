@@ -1,10 +1,10 @@
+import 'package:flipkart/src/core/data_state/data_state.dart';
 import 'package:flipkart/src/presentation/controller/home_controller/home_controller.dart';
 import 'package:flipkart/src/presentation/screens/home_screen/widgets/loading/product_card_skelton.dart';
 import 'package:flipkart/src/presentation/widgets/product_card/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -64,79 +64,83 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Obx(() {
-          if (controller.isLoading.value) {
-            return GridView.builder(
-              padding: const EdgeInsets.all(12),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.65,
-              ),
-              itemCount: 6,
-              itemBuilder: (_, __) => ProductCardSkeleton(),
-            );
-          }
-
-          if (controller.error.value.isNotEmpty) {
-            return Center(
-              child: Text(
-                controller.error.value,
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade800,
+          switch (controller.state.value) {
+            case DataState.loading:
+              return GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.65,
                 ),
-              ),
-            );
-          }
+                itemCount: 6,
+                itemBuilder: (_, _) => ProductCardSkeleton(),
+              );
 
-          if (controller.productsList.isEmpty) {
-            return const Center(child: Text("No products available"));
-          }
-
-          return RefreshIndicator(
-            color: const Color(0xFF010048),
-            backgroundColor: Colors.white,
-            onRefresh: controller.fetchproduct,
-            child: GridView.builder(
-              padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
-              itemCount: controller.productsList.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 8,
-                childAspectRatio: 0.75,
-              ),
-              itemBuilder: (context, index) {
-                final product = controller.productsList[index];
-                final bool isLastColumn = (index + 1) % crossAxisCount == 0;
-
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: isLastColumn
-                          ? BorderSide.none
-                          : BorderSide(color: Colors.grey.shade300, width: 1),
-                    ),
+            case DataState.success:
+              return RefreshIndicator(
+                color: const Color(0xFF010048),
+                backgroundColor: Colors.white,
+                onRefresh: controller.fetchproduct,
+                child: GridView.builder(
+                  padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
+                  itemCount: controller.productsList.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 8,
+                    childAspectRatio: 0.75,
                   ),
-                  child: ProductCard(
-                    imageUrl: product.image,
-                    title: product.title,
-                    originalPrice: product.price.toInt(),
-                    discountPercent: 10,
-                    price: ((product.price.toInt() * (100 - 10)) / 100).round(),
-                    rating: product.rating.toInt(),
-                    deliveryText: "Delivered soon",
-                    ratingCount: product.ratingCount,
-                    isLiked: false,
-                    onTap: () {},
-                    onLikeTap: () {},
-                  ),
-                );
-              },
-            ),
-          );
+                  itemBuilder: (context, index) {
+                    final product = controller.productsList[index];
+                    final bool isLastColumn = (index + 1) % crossAxisCount == 0;
+
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: isLastColumn
+                              ? BorderSide.none
+                              : BorderSide(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
+                                ),
+                        ),
+                      ),
+                      child: ProductCard(
+                        imageUrl: product.image,
+                        title: product.title,
+                        originalPrice: product.price.toInt(),
+                        discountPercent: 10,
+                        price: ((product.price.toInt() * (100 - 10)) / 100)
+                            .round(),
+                        rating: product.rating.toInt(),
+                        deliveryText: "Delivered soon",
+                        ratingCount: product.ratingCount,
+                        isLiked: false,
+                        onTap: () {},
+                        onLikeTap: () {},
+                      ),
+                    );
+                  },
+                ),
+              );
+
+            case DataState.error:
+              return const Center(child: Text("No products available"));
+            case DataState.initial:
+              return GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.65,
+                ),
+                itemCount: 6,
+                itemBuilder: (_, _) => ProductCardSkeleton(),
+              );
+          }
         }),
       ),
     );
